@@ -5,9 +5,9 @@ This containerised Mediawiki configuration allows greater flexibility and compat
 ## Stuff Included
 
 - Nginx
-- VisualEditor and Parsiod
+- Visual Editor and Parsiod
 - Redis
-- ElasticSearch
+- Elasticsearch
 - MariaDB
 
 
@@ -25,7 +25,7 @@ Start docker-compose
 docker-compose up
 ```
 
-`scripts` directory includes some scripts that helps you with MW extension installation and ElasticSearch indexing.
+`scripts` directory includes some scripts that helps you with MW extension installation and Elasticsearch indexing.
 
 ## Things to note
 
@@ -37,5 +37,5 @@ docker-compose up
 
 ## Todo
 
-1. Automatic the ElasticSearch indexing process
+1. Automatic the Elasticsearch indexing process
 2. Rewrite the app docker with Alpine for better image size.
