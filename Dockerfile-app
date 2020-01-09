@@ -1,0 +1,51 @@
+FROM php:7.3-fpm-buster
+
+# Utilities
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install apt-transport-https ca-certificates git curl wget zip -y 
+
+# MySQL
+RUN docker-php-ext-install mysqli
+
+# APCU
+RUN pecl install apcu && \
+    docker-php-ext-enable apcu --ini-name apcu.ini
+
+# Imagick
+RUN apt-get install imagemagick libmagickwand-6.q16-dev -y && \
+    pecl install imagick && \
+    docker-php-ext-enable imagick
+
+# International Components for Unicode
+RUN docker-php-ext-install intl
+
+# librsvg
+RUN apt install librsvg2-bin -y
+
+# opcache
+RUN docker-php-ext-install opcache
+
+# Compose
+RUN wget https://getcomposer.org/composer.phar -q && \
+    mv composer.phar /usr/local/bin/composer && \
+    chmod 777 /usr/local/bin/composer
+
+# redis
+RUN pecl install redis
+
+# Override php.ini
+COPY php_ini/mw.ini $PHP_INI_DIR/conf.d/
+
+# Xhprof
+RUN cd ~ && \
+    git clone https://github.com/tideways/php-xhprof-extension.git && \
+    cd php-xhprof-extension && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf php-xhprof-extension
+
+CMD ["php-fpm"] 

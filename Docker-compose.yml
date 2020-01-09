@@ -1,0 +1,49 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-app
+    restart: always
+    volumes:
+      - ./app/mw:/var/mw
+      - ./app/images:/var/mw/images
+      # - ./log:/var/log/mediawiki
+    depends_on:
+      - parsoid
+      - elasticsearch
+      - redis
+      - db
+  parsoid:
+    build:
+      context: .
+      dockerfile: Dockerfile-parsoid
+    environment:
+      PARSOID_DOMAIN_wiki_web_1: http://wiki_web_1/api.php
+      PARSOID_NUM_WORKERS: ncpu
+  elasticsearch:
+    image: elasticsearch:6.8.4
+    command: ["elasticsearch", "-Elogger.level=ERROR"]
+  redis:
+    image: redis:5.0.6-alpine
+  web:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./app/mw:/var/mw
+    depends_on:
+      - app
+    ports:
+      - 8080:80
+  db:
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - ./db/config:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: wiki_db
+      MYSQL_USER: mw
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD:
