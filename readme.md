@@ -30,7 +30,7 @@ docker-compose up
 ## Things to note
 
 1. Both the PHP handler and Nginx need to have access to the mediawiki files.
-2. Make sure to use `innodb_flush_method=littlesync` in your mariadb setting if you are running on Windows.
+2. Make sure to use `innodb_flush_method=littlesync` in your mariadb setting if you are running on Windows due to upstream bug.
 3. Parsoid may refuse to shutdown gracefully. You can simply force kill that container.
 4. I put the image volume outside the main mw directory. This is purely personal preference.
 
